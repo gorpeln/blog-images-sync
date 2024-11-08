@@ -1,0 +1,35 @@
+name: Sync Images from UpYun
+
+on:
+  schedule:
+    - cron: '0 0 * * 3'  # 每周三凌晨0点同步一次
+  workflow_dispatch:
+
+jobs:
+  sync-images:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install upyun pygithub
+
+    - name: Sync images
+      env:
+        UPYUN_BUCKET: ${{ secrets.UPYUN_BUCKET }}
+        UPYUN_USERNAME: ${{ secrets.UPYUN_USERNAME }}
+        UPYUN_PASSWORD: ${{ secrets.UPYUN_PASSWORD }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  
+        REPO_NAME: ${{ secrets.REPO_NAME }}  
+        REPO_OWNER: ${{ secrets.REPO_OWNER }} 
+        BRANCH_NAME: master
+      run: |
+        python sync_images.py
