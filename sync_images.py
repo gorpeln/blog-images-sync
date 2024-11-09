@@ -40,7 +40,7 @@ def sync_images(base_path='/'):
                 try:
                     repo = gh.get_user(REPO_OWNER).get_repo(REPO_NAME)
                     try:
-                        existing_file = repo.get_contents(filename)
+                        repo.get_contents(filename)
                         print(f"File {filename} already exists in GitHub.")
                     except GithubException as e:
                         if e.status == 404:
